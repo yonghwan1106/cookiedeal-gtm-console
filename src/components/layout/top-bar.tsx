@@ -20,6 +20,10 @@ export function TopBar() {
     : "--:--:--";
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b border-border-base bg-bg-base/80 backdrop-blur px-5">
+      <span className="px-2.5 h-6 rounded-md bg-gradient-to-r from-accent-amber/25 to-accent-amber/10 border border-accent-amber/50 text-accent-amber text-[10px] font-bold flex items-center gap-1.5 shrink-0">
+        <span>★</span>
+        <span>채용 연계형 기업 실무 프로젝트 출품작</span>
+      </span>
       <div className="flex items-center gap-2 text-xs text-fg-muted">
         <span className="relative inline-flex h-2 w-2 rounded-full bg-accent-green live-dot" />
         <span className="font-mono">파이프라인 정상</span>

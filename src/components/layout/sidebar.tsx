@@ -73,11 +73,11 @@ export function Sidebar() {
           </span>
         </div>
         <div className="text-fg-muted leading-relaxed">
-          박용환 · 2026 프렉탈테크놀로지
+          2026 신용보증기금 × ICT콤플렉스
           <br />
-          채용 연계 실무 프로젝트
+          채용 연계형 기업 실무 프로젝트 출품작
           <br />
-          신청서 첨부 프로토타입
+          박용환 (1지망 ① 프렉탈테크놀로지)
         </div>
       </div>
     </aside>

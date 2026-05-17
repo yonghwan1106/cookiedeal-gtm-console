@@ -71,9 +71,13 @@ export default function OverviewPage() {
     <div className="p-6 lg:p-8 space-y-6 max-w-[1600px] mx-auto">
       <div className="flex items-end justify-between flex-wrap gap-3">
         <div>
-          <div className="flex items-center gap-2 text-xs text-fg-faint">
+          <div className="flex items-center gap-2 text-xs text-fg-faint flex-wrap">
             <Badge variant="blue">DASHBOARD</Badge>
             <span className="font-mono">2026-05-17</span>
+            <span className="text-fg-faint">·</span>
+            <span className="px-2 h-5 rounded bg-accent-amber/15 border border-accent-amber/40 text-accent-amber font-mono text-[10px] flex items-center gap-1">
+              ★ 2026 신용보증기금 × ICT콤플렉스 채용 연계형 기업 실무 프로젝트 출품작 · 1지망 ① 프렉탈테크놀로지 · 박용환
+            </span>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight mt-1">
             GTM 인텔리전스 개요

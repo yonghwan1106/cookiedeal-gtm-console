@@ -92,11 +92,11 @@ export function MatchesExplorer() {
             {histogramBins.map((c, i) => {
               const h = (c / histMax) * 100;
               return (
-                <div key={i} className="flex-1 flex flex-col items-center gap-1">
-                  <div className="flex-1 w-full flex items-end">
+                <div key={i} className="flex-1 flex flex-col items-center gap-1 h-full">
+                  <div className="flex-1 w-full flex items-end min-h-0">
                     <div
-                      className="w-full rounded-t bg-gradient-to-t from-accent-purple/30 to-accent-purple"
-                      style={{ height: `${h}%` }}
+                      className="w-full rounded-t bg-gradient-to-t from-accent-purple/30 to-accent-purple transition-all"
+                      style={{ height: `${h}%`, minHeight: c > 0 ? "2px" : "0" }}
                       title={`${i * 10}-${i * 10 + 9}: ${c}건`}
                     />
                   </div>
