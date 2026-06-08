@@ -1,8 +1,16 @@
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { SOURCES } from "@/data/sources";
-import { Database, FileJson, GitBranch } from "lucide-react";
+import { Database, FileJson, GitBranch, Layers } from "lucide-react";
 import { formatNumber } from "@/lib/format";
+
+// 공식 과제 4개 도메인 그룹핑.
+const DOMAINS: { key: string; label: string; color: "blue" | "green" | "amber" | "purple"; sourceIds: string[] }[] = [
+  { key: "public", label: "① 공공데이터", color: "blue", sourceIds: ["dart", "nts", "kosis"] },
+  { key: "industry", label: "② 산업 도메인 데이터", color: "purple", sourceIds: ["kodit", "kis", "nice", "kb-realestate"] },
+  { key: "news", label: "③ 뉴스", color: "amber", sourceIds: ["news"] },
+  { key: "jobs", label: "④ 채용공고", color: "green", sourceIds: ["jobs"] },
+];
 
 export default function SourcesPage() {
   return (
@@ -10,7 +18,7 @@ export default function SourcesPage() {
       <div>
         <div className="flex items-center gap-2 text-xs text-fg-faint">
           <Badge variant="blue">DATA CATALOG</Badge>
-          <span className="font-mono">8 sources · {SOURCES.reduce((s, x) => s + x.schema.length, 0)} fields</span>
+          <span className="font-mono">{SOURCES.length} sources · {SOURCES.reduce((s, x) => s + x.schema.length, 0)} fields · 4 domains</span>
         </div>
         <h1 className="text-2xl font-semibold tracking-tight mt-1">데이터 소스 카탈로그</h1>
         <p className="text-sm text-fg-muted mt-1 max-w-2xl">
@@ -18,6 +26,38 @@ export default function SourcesPage() {
           신규 매물 입수 시 데이터 lineage 를 추적할 수 있습니다.
         </p>
       </div>
+
+      {/* 공식 4개 도메인 그룹핑 밴드 */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Layers className="h-4 w-4 text-accent-blue" />
+            <CardTitle>4개 도메인 ETL</CardTitle>
+          </div>
+          <CardDescription>공공데이터 · 산업 도메인 데이터 · 뉴스 · 채용공고를 단일 모델로 통합</CardDescription>
+        </CardHeader>
+        <div className="px-5 pb-5 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3">
+          {DOMAINS.map((d) => (
+            <div key={d.key} className="rounded-lg border border-border-base bg-bg-elevated/40 p-3">
+              <Badge variant={d.color}>{d.label}</Badge>
+              <div className="mt-2.5 flex flex-wrap gap-1.5">
+                {d.sourceIds.map((id) => {
+                  const s = SOURCES.find((x) => x.id === id);
+                  if (!s) return null;
+                  return (
+                    <span
+                      key={id}
+                      className="text-[11px] font-mono px-1.5 py-0.5 rounded border border-border-base bg-bg-base text-fg-muted"
+                    >
+                      {s.name}
+                    </span>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+      </Card>
 
       <Card>
         <CardHeader>

@@ -2,22 +2,34 @@
 
 > 쿠키딜 GTM 인텔리전스 콘솔 — 다출처 분산 기업 정보를 단일 모델로 통합하는 **ETL 파이프라인** + 중소기업 M&A 매칭 **BI 대시보드** 프로토타입.
 
-「2026 신용보증기금 × ICT콤플렉스 채용 연계형 기업 실무 프로젝트」 1지망 **① 프렉탈테크놀로지(쿠키딜)** — *GTM ETL 인텔리전스 데이터 파이프라인 구축 + 데이터 대시보드 제작* 과제에 첨부하는 라이브 데모입니다.
+「2026 신용보증기금 × ICT콤플렉스 채용 연계형 기업 실무 프로젝트」 1지망 **① 프렉탈테크놀로지(쿠키딜)** · 선발분야 **② AI Product Engineer (Data)** — *GTM ETL 인텔리전스 데이터 파이프라인 구축 + 데이터 대시보드 제작* 과제에 첨부하는 라이브 데모입니다.
+
+선발분야 ② **AI Product Engineer (Data)** 직무의 4대 역량을 콘솔에서 직접 시연합니다.
+
+| 직무 역량 | 시연 페이지 |
+|---|---|
+| **4개 도메인 ETL** (공공데이터·산업 도메인·뉴스·채용공고) | `/sources` |
+| **Entity Resolution** (다출처 동일 기업 병합) | `/entities` |
+| **데이터 품질 스코어링** (4축: 완전성·신선도·일관성·유효성) | `/quality` |
+| **LLM 시그널 추출** (NER + topic + 성장 스코어) | `/signals` |
 
 - 작성자: **박용환** ([@yonghwan1106](https://github.com/yonghwan1106))
 - 라이브: https://cookiedeal-gtm-console.vercel.app *(배포 후)*
 - 22개월 누적 86건 수상 / Vercel 라이브 데모 7건 별도 보유
 
-## 페이지 (6)
+## 페이지 (9)
 
 | # | 경로 | 설명 |
 |---|---|---|
-| 1 | `/` | **Overview Dashboard** — KPI 6개 + GTM 퍼널 + 12개월 시계열 + 지역/업종 분포 + 실시간 활동 피드 |
+| 1 | `/` | **Overview Dashboard** — KPI 6개 + ② 직무 역량 시연 진입점 + GTM 퍼널 + 12개월 시계열 + 지역/업종 분포 + 실시간 활동 피드 |
 | 2 | `/deals` | **매물 익스플로러** — 50건 mock 매물, 업종/지역/매출/매칭점수 필터, 테이블 ↔ 카드 토글 |
 | 3 | `/deals/[id]` | **매물 상세** — 재무 3년 차트, AI 매칭 TOP 5 바이어 + XAI 사유, 데이터 출처 카드, 유사 매물 |
 | 4 | `/matches` | **AI 매칭 매트릭스** — 셀러×바이어 heatmap, 점수 분포 히스토그램, 가중치 슬라이더 (실시간 재계산) |
 | 5 | `/pipeline` | **ETL 모니터링** — 8개 소스 상태판, 7일 처리량, 알림 패널, 실행 로그 50건 |
-| 6 | `/sources` | **데이터 카탈로그** — 8개 소스 스키마·SLA·신뢰도·샘플 row, ERD, 가상 API 미리보기 |
+| 6 | `/sources` | **데이터 카탈로그** — **9개** 소스 스키마·SLA·신뢰도·샘플 row, **4개 도메인 ETL 밴드**, ERD, 가상 API 미리보기 |
+| 7 | `/entities` | **Entity Resolution** — 다출처 레코드를 사업자번호 우선·회사명 유사도로 병합, matchedBy 배지·유사도·충돌 하이라이트·canonical 레코드 |
+| 8 | `/quality` | **데이터 품질** — 소스별 4축(완전성·신선도·일관성·유효성) RadarChart, 종합 점수 KPI, worst offenders, 이슈 진단 |
+| 9 | `/signals` | **LLM 시그널 추출** — 원문 → NER(회사·인물·금액·직무·날짜·기관) + topic + 성장 스코어 + model/latency/tokens (결정론적 시뮬레이션) |
 
 ## 기술 스택
 
@@ -34,9 +46,17 @@
 - `buyers.ts` — **30** 바이어 (PE · 전략적 SI · 패밀리오피스 · 해외 SI · VC)
 - `matches.ts` — **1,500** 매칭 (50×30 매트릭스, 상위 200건 캐시)
 - `etl-runs.ts` — **~1,300** ETL 실행 로그 (7일 × 8소스)
-- `sources.ts` — **8** 데이터 소스 (DART · NTS · KODIT · KIS · NICE · KOSIS · NEWS · KB-RE)
+- `sources.ts` — **9** 데이터 소스 (DART · NTS · KODIT · KIS · NICE · KOSIS · NEWS · KB-RE · **JOBS**)
+- `job-postings.ts` — **40** 채용공고 (사람인·잡코리아·원티드) + 회사별 조직 성장 시그널 집계
+- `entities.ts` — Entity Resolution 데모 원시 레코드 (케이세븐테크 5개 소스 병합 등)
 - `activity.ts` — **50** 활동 피드 이벤트
-- `_seed.ts` — mulberry32 PRNG로 시드 고정
+- `seed.ts` — mulberry32 PRNG로 시드 고정
+
+## ② AI Product Engineer (Data) 신규 lib
+
+- `lib/entity-resolution.ts` — 사업자번호 우선·회사명 정규화·Levenshtein/Jaccard 유사도 기반 클러스터링 (순수 함수)
+- `lib/data-quality.ts` — 소스별 4축 품질 스코어링 (순수 함수, 결정론적)
+- `lib/signals.ts` — 뉴스/채용 원문 → NER + topic + 성장 스코어 파이프라인 (**결정론적 시뮬레이션** — 운영은 Claude API)
 
 ## 실행
 

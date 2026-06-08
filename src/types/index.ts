@@ -102,7 +102,8 @@ export type SourceCategory =
   | "통계"
   | "뉴스"
   | "부동산"
-  | "금융";
+  | "금융"
+  | "채용";
 
 export type SourceHealth = "green" | "yellow" | "red";
 
@@ -157,4 +158,88 @@ export interface Activity {
   actor: string;
   target: string;
   detail: string;
+}
+
+// ─────────────────────────────────────────────────────────────
+// ② AI Product Engineer (Data) 직무 역량 시연용 신규 도메인
+// 4개 도메인 ETL(채용) · Entity Resolution · 데이터 품질 · LLM 시그널
+// ─────────────────────────────────────────────────────────────
+
+// 조직 성장 시그널: 채용 모집인원 증가율 기반
+export type GrowthSignal = "급증" | "확장" | "유지" | "감축";
+
+// 채용공고 (사람인·잡코리아·원티드 통합) — 회사 가명과 연결
+export interface JobPosting {
+  id: string;
+  companyAlias: string; // companies.ts 가명과 연결 (예: "케이세븐테크")
+  bizNo: string;
+  title: string; // 직무명
+  headcount: number; // 모집인원
+  postedAt: string; // ISO
+  source: "사람인" | "잡코리아" | "원티드";
+  seniorityMix: string; // 예: "주니어 60% · 시니어 40%"
+  growthSignal: GrowthSignal;
+}
+
+// Entity Resolution: 한 소스에서 들어온 원시 멤버 레코드
+export interface EntityMemberRecord {
+  sourceId: string;
+  rawName: string; // 원문 회사명 (소스별 표기 상이)
+  bizNo: string | null;
+  fields: Record<string, unknown>;
+  matchScore: number; // 0~1 (canonical 과의 유사도)
+  matchedBy: "biz_no" | "name_exact" | "name_fuzzy";
+  conflicts?: string[]; // 필드 충돌 진단 (사람이 읽는 한 줄)
+}
+
+// Entity Resolution 결과: 다출처 병합된 단일 엔터티 클러스터
+export interface ResolvedEntity {
+  canonicalId: string;
+  canonicalName: string; // 정규화된 대표 회사명
+  bizNo: string;
+  members: EntityMemberRecord[];
+  confidence: number; // 0~1 클러스터 신뢰도
+  conflictCount: number;
+  sourceCount: number;
+}
+
+// 데이터 품질 4축
+export type QualityAxis =
+  | "completeness"
+  | "freshness"
+  | "consistency"
+  | "validity";
+
+export interface QualityScore {
+  sourceId: string;
+  sourceName: string;
+  completeness: number; // 0~100 스키마 충실도·null 비율
+  freshness: number; // 0~100 신선도 (lastSync vs 주기)
+  consistency: number; // 0~100 ER 충돌·표기 일관성
+  validity: number; // 0~100 successRate·신뢰도
+  overall: number; // 0~100 가중 평균
+  issues: string[]; // 사람이 읽는 진단 한 줄들
+}
+
+// LLM 시그널 추출: NER 엔터티
+export interface NerEntity {
+  text: string;
+  type: "company" | "person" | "money" | "role" | "date" | "org";
+  confidence: number; // 0~1
+  normalized?: string; // 정규화 표현 (예: 금액 → 백만원, 회사 → canonical)
+}
+
+// LLM 시그널 추출: 원문 텍스트 → 구조화 출력
+export interface ExtractedSignal {
+  id: string;
+  rawText: string; // 원문 (뉴스/채용)
+  sourceKind: "news" | "job";
+  entities: NerEntity[];
+  topic: string;
+  growthScore: number; // 0~100 성장 시그널 스코어
+  rationale: string; // 한 줄 근거
+  model: string; // 정직한 라벨링: 프로토타입 = 결정론적 시뮬레이션
+  latencyMs: number; // 시뮬레이션 값
+  tokensIn: number; // 시뮬레이션 값
+  tokensOut: number; // 시뮬레이션 값
 }

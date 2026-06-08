@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { KpiCard } from "@/components/kpi/kpi-card";
+import { Layers, Network, ShieldCheck, Brain } from "lucide-react";
 import { GtmFunnel } from "@/components/charts/funnel-stages";
 import { TimeSeries } from "@/components/charts/time-series";
 import { BarDistribution } from "@/components/charts/bar-distribution";
@@ -76,7 +78,7 @@ export default function OverviewPage() {
             <span className="font-mono">2026-05-17</span>
             <span className="text-fg-faint">·</span>
             <span className="px-2 h-5 rounded bg-accent-amber/15 border border-accent-amber/40 text-accent-amber font-mono text-[10px] flex items-center gap-1">
-              ★ 2026 신용보증기금 × ICT콤플렉스 채용 연계형 기업 실무 프로젝트 출품작 · 1지망 ① 프렉탈테크놀로지 · 박용환
+              ★ 2026 신용보증기금 × ICT콤플렉스 채용 연계형 기업 실무 프로젝트 출품작 · 1지망 ① 프렉탈테크놀로지 · 선발분야 ② AI Product Engineer (Data) · 박용환
             </span>
           </div>
           <h1 className="text-2xl font-semibold tracking-tight mt-1">
@@ -102,6 +104,40 @@ export default function OverviewPage() {
         <KpiCard label="진행 중 NDA·LOI" value={String(activeNda)} unit="건" delta={-1.5} deltaLabel="WoW" sparkData={sparkNda} accent="amber" />
         <KpiCard label="파이프라인 헬스" value={pipelineHealth.toFixed(1)} unit="%" delta={0.4} deltaLabel="7d" sparkData={sparkHealth} accent="green" />
       </div>
+
+      {/* ② AI Product Engineer (Data) 직무 역량 시연 진입점 */}
+      <Card>
+        <CardHeader>
+          <div className="flex items-center gap-2">
+            <Layers className="h-4 w-4 text-accent-blue" />
+            <CardTitle>AI Product Engineer (Data) 역량 시연</CardTitle>
+          </div>
+          <CardDescription>
+            4개 도메인 ETL · Entity Resolution · 데이터 품질 스코어링 · LLM 시그널 추출
+          </CardDescription>
+        </CardHeader>
+        <div className="px-5 pb-5 grid grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            { href: "/sources", icon: Layers, label: "4개 도메인 ETL", desc: "공공·산업·뉴스·채용 통합", color: "text-accent-blue" },
+            { href: "/entities", icon: Network, label: "Entity Resolution", desc: "다출처 동일 기업 병합", color: "text-accent-purple" },
+            { href: "/quality", icon: ShieldCheck, label: "데이터 품질", desc: "4축 스코어링", color: "text-accent-green" },
+            { href: "/signals", icon: Brain, label: "LLM 시그널", desc: "NER·성장 스코어", color: "text-accent-amber" },
+          ].map((it) => {
+            const Icon = it.icon;
+            return (
+              <Link
+                key={it.href}
+                href={it.href}
+                className="rounded-lg border border-border-base bg-bg-elevated/40 p-3 card-hover hover:border-border-strong"
+              >
+                <Icon className={`h-4 w-4 ${it.color} mb-2`} />
+                <div className="text-sm font-semibold text-fg">{it.label}</div>
+                <div className="text-[11px] text-fg-faint mt-0.5">{it.desc}</div>
+              </Link>
+            );
+          })}
+        </div>
+      </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <Card className="lg:col-span-2">

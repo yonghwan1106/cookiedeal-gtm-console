@@ -9,6 +9,9 @@ import {
   Workflow,
   Database,
   Cookie,
+  Network,
+  ShieldCheck,
+  Brain,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -17,7 +20,10 @@ const NAV = [
   { href: "/deals", label: "매물", icon: Briefcase, count: 50 },
   { href: "/matches", label: "AI 매칭", icon: Sparkles, count: 200 },
   { href: "/pipeline", label: "ETL 파이프라인", icon: Workflow, count: 8 },
-  { href: "/sources", label: "데이터 소스", icon: Database, count: 8 },
+  { href: "/sources", label: "데이터 소스", icon: Database, count: 9 },
+  { href: "/entities", label: "Entity Resolution", icon: Network, count: null },
+  { href: "/quality", label: "데이터 품질", icon: ShieldCheck, count: null },
+  { href: "/signals", label: "LLM 시그널", icon: Brain, count: null },
 ];
 
 export function Sidebar() {
@@ -77,7 +83,7 @@ export function Sidebar() {
           <br />
           채용 연계형 기업 실무 프로젝트 출품작
           <br />
-          박용환 (1지망 ① 프렉탈테크놀로지)
+          박용환 · 1지망 ① 프렉탈테크놀로지 · 선발분야 ② AI Product Engineer (Data)
         </div>
       </div>
     </aside>
